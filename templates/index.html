@@ -1,0 +1,35 @@
+{% extends "base.tpl" %}
+{% block content %}
+  <table class="ui table celled">
+    <thead>
+      <tr>
+        <th>Identifier</th>
+        <th>Graph</th>
+        <th>Urgency</th>
+        <th>Active</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in data %}
+        <tr>
+	  <td>{{item.id}}</td>
+	  <td class="center aligned" data-graph="{{item.graph}}"></td>
+	  <td><strong>{{item.urgency}}</strong></td>
+          <td class="positive">Active</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <script>
+    let grphs = document.querySelectorAll('*[data-graph]')
+    for(let i = 0; i<grphs.length; i++){
+      let grph = Viz(`
+        digraph g {
+          rankdir="LR"
+          ${grphs[i].dataset.graph}
+        }
+      `,{format:'png-image-element'})
+      grphs[i].appendChild(grph)
+    }
+  </script>
+{% endblock %}

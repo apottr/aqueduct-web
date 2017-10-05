@@ -1,0 +1,58 @@
+{% extends "base.tpl" %}
+
+{% block content %}
+<style>
+#graphInput{
+  font-family: monospace;
+  text-align: center
+}
+</style>
+<div class="ui grid">
+  <div class="centered row">
+    <div id="graphContainer"></div>
+  </div>
+  <div class="row">
+    <div class="column">
+      <form method="POST" action="/add" class="ui form">
+        <div class="field">
+          <label>Graph</label>
+	  <input type="text" name="graph" id="graphInput" value="a -> b -> c;">
+        </div>
+        <div class="field">
+          <label>Urgency</label>
+          <input type="text" name="urgency">
+        </div>
+        <div class="field">
+          <label>Identifier</label>
+          <input type="text" name="id">
+        </div>
+	<div class="field">
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+Element.prototype.removeAll = function () {
+  while (this.firstChild) { this.removeChild(this.firstChild); }
+  return this;
+};
+
+function makeGraph(g){
+  let grph = g
+  let graph = Viz(`
+  digraph g {
+    rankdir="LR"
+    ${grph}
+}
+`,{"format": "png-image-element"})
+  document.querySelector("#graphContainer").removeAll()
+  document.querySelector("#graphContainer").appendChild(graph)
+}
+
+document.querySelector("#graphInput").addEventListener("change",e => makeGraph(e.target.value))
+
+makeGraph("a -> b -> c;")
+</script>
+{% endblock %}
